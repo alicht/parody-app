@@ -41,6 +41,8 @@ A FastAPI-based parody news application.
 
 ## Running Locally
 
+### Option 1: Run as FastAPI Web Server
+
 Start the FastAPI development server:
 
 ```bash
@@ -49,15 +51,50 @@ uvicorn app.main:app --reload
 
 The API will be available at `http://localhost:8000`
 
-### Available Endpoints:
-
+**Available Endpoints:**
 - `GET /health` - Health check endpoint
 - `GET /articles` - Retrieve recent tragedy articles from database
   - Optional query param: `?limit=50` (max 100)
 - `POST /poll` - Manually trigger headline polling
 - `GET /docs` - Interactive API documentation (Swagger UI)
 
-The application automatically polls for headlines every 5 minutes and stores tragedy-related articles in the database.
+### Option 2: Run as Standalone Polling Service
+
+Run continuous polling without the web server:
+
+```bash
+python -m app.main
+```
+
+This mode:
+- Runs an initial poll immediately on startup
+- Schedules automatic polling every 5 minutes
+- Displays detailed logging for all detected tragedies
+- Sends push notifications for new articles
+- Can be stopped with Ctrl+C
+
+**Example output:**
+```
+============================================================
+PARODY NEWS TRAGEDY DETECTOR
+============================================================
+Started at: 2024-01-15 10:30:45
+
+Initializing database...
+Database ready. Current article count: 42
+
+Running initial poll...
+[2024-01-15 10:30:46] Starting scheduled news poll...
+Fetched 20 headlines
+  ✓ Detected tragedy: Earthquake strikes coastal region...
+  ✓ Detected tragedy: Fatal crash on highway causes major delays...
+[2024-01-15 10:30:48] Poll complete: 2 new tragedies detected and saved
+
+Starting continuous polling (every 5 minutes)...
+Press Ctrl+C to stop
+```
+
+Both modes share the same database and will detect/store tragedy articles.
 
 ## API Keys Configuration
 

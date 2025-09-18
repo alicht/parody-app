@@ -2,6 +2,10 @@ from fastapi import FastAPI, BackgroundTasks
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 import asyncio
+import schedule
+import time
+import threading
+from datetime import datetime
 from typing import Dict, List
 
 from app.news_fetcher import fetch_headlines
@@ -142,3 +146,80 @@ async def trigger_poll(background_tasks: BackgroundTasks) -> Dict:
         "message": "Poll triggered",
         "current_article_count": get_article_count()
     }
+
+
+def poll_news():
+    """Synchronous polling function for use with schedule library"""
+    print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Starting scheduled news poll...")
+    
+    try:
+        # Fetch headlines
+        headlines = fetch_headlines()
+        print(f"Fetched {len(headlines)} headlines")
+        
+        # Filter for tragedies and save to database
+        new_articles = 0
+        detected_tragedies = []
+        
+        for headline in headlines:
+            if is_tragedy(headline['title']):
+                article = save_article(headline['title'], headline['url'])
+                if article:
+                    new_articles += 1
+                    detected_tragedies.append(headline['title'])
+                    print(f"  ✓ Detected tragedy: {headline['title'][:80]}...")
+                    # Send push notification for new tragedy
+                    send_notification(headline['title'], headline['url'])
+        
+        # Log summary
+        if new_articles > 0:
+            print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Poll complete: {new_articles} new tragedies detected and saved")
+            for i, title in enumerate(detected_tragedies, 1):
+                print(f"  {i}. {title[:100]}...")
+        else:
+            print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Poll complete: No new tragedies detected")
+        
+        return new_articles
+        
+    except Exception as e:
+        print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ERROR in poll_news: {e}")
+        return 0
+
+
+def run_schedule_loop():
+    """Run the schedule loop in a separate thread"""
+    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Schedule thread started - polling every 5 minutes")
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+
+if __name__ == "__main__":
+    """Run as standalone polling service"""
+    print("=" * 60)
+    print("PARODY NEWS TRAGEDY DETECTOR")
+    print("=" * 60)
+    print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    
+    # Initialize database
+    print("\nInitializing database...")
+    init_db()
+    print(f"Database ready. Current article count: {get_article_count()}")
+    
+    # Schedule polling every 5 minutes
+    schedule.every(5).minutes.do(poll_news)
+    
+    # Run initial poll immediately
+    print("\nRunning initial poll...")
+    poll_news()
+    
+    # Start schedule loop
+    print("\nStarting continuous polling (every 5 minutes)...")
+    print("Press Ctrl+C to stop\n")
+    
+    try:
+        run_schedule_loop()
+    except KeyboardInterrupt:
+        print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Polling service stopped by user")
+        print(f"Total articles in database: {get_article_count()}")
+        print("Goodbye!")
