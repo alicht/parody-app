@@ -24,6 +24,14 @@ A FastAPI-based parody news application.
    pip install -r requirements.txt
    ```
 
+4. Set up environment variables:
+   Create a `.env` file in the project root and add your NewsAPI key:
+   ```
+   NEWSAPI_KEY=your_newsapi_key_here
+   ```
+   
+   Get your free API key from https://newsapi.org/
+
 ## Running Locally
 
 Start the FastAPI development server:
@@ -38,18 +46,25 @@ You can check the health status at: `http://localhost:8000/health`
 
 API documentation will be available at: `http://localhost:8000/docs`
 
-## API Keys
+## API Keys Configuration
 
-Configure the following API keys as environment variables:
+The application uses environment variables for API keys. These are loaded from a `.env` file in the project root.
 
-- `NEWS_API_KEY`: Your NewsAPI key (get from https://newsapi.org/)
-- `FIREBASE_CREDENTIALS`: Path to Firebase service account credentials JSON
-- Additional API keys as needed
+### Required API Keys:
 
-Create a `.env` file in the project root and add your keys:
+- **NEWSAPI_KEY**: Your NewsAPI key for fetching news headlines
+  - Get your free API key from https://newsapi.org/
+  - The app will fallback to RSS feeds if NewsAPI is unavailable
+
+### Optional API Keys:
+
+- `FIREBASE_CREDENTIALS`: Path to Firebase service account credentials JSON (for future features)
+- Additional API keys can be added as needed
+
+Example `.env` file:
 
 ```
-NEWS_API_KEY=your_key_here
+NEWSAPI_KEY=your_newsapi_key_here
 FIREBASE_CREDENTIALS=path/to/credentials.json
 ```
 

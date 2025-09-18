@@ -6,3 +6,4 @@ firebase-admin
 sqlalchemy
 feedparser
 pytest
+python-dotenv
