@@ -139,7 +139,7 @@ const App = () => {
 
   const ListEmptyComponent = () => (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>No tragedy alerts yet</Text>
+      <Text style={styles.emptyText}>No alerts yet</Text>
       <Text style={styles.emptySubtext}>Pull down to refresh</Text>
     </View>
   );
@@ -147,7 +147,7 @@ const App = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Tragedy Alerts</Text>
+        <Text style={styles.headerTitle}>Israel Alerts</Text>
         <Text style={styles.headerSubtitle}>Real-time news monitoring</Text>
       </View>
 
