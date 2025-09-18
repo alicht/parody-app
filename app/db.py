@@ -8,7 +8,8 @@ from sqlalchemy.orm import sessionmaker, Session
 Base = declarative_base()
 
 # Database configuration
-DATABASE_URL = "sqlite:///parody.db"
+import os
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///parody.db")
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: parody-app
+    runtime: docker
+    plan: free
+    region: oregon
+    healthCheckPath: /health
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: NEWSAPI_KEY
+        sync: false
+      - key: FIREBASE_CREDENTIALS
+        sync: false
+      - key: DATABASE_URL
+        value: sqlite:////app/data/parody.db
+      - key: PYTHONUNBUFFERED
+        value: 1
+    disk:
+      name: sqlite-data
+      mountPath: /app/data
+      sizeGB: 1

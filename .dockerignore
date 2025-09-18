@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+.coverage
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Database (will be created in container)
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment files (except example)
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# Documentation
+*.md
+docs/
+
+# Testing
+tests/
+pytest.ini
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# React Native client
+parody-client/
+
+# Firebase credentials (should be mounted as secret)
+serviceAccountKey.json
+firebase-credentials.json
+
+# Fly.io
+fly.toml
