@@ -68,9 +68,24 @@ NEWSAPI_KEY=your_newsapi_key_here
 FIREBASE_CREDENTIALS=path/to/credentials.json
 ```
 
-## Development
+## Testing
 
-Run tests:
+Run all tests:
 ```bash
-pytest
+pytest -v
 ```
+
+Run tests with coverage:
+```bash
+pytest --cov=app -v
+```
+
+Run specific test file:
+```bash
+pytest tests/test_filters.py -v
+```
+
+The project includes comprehensive test coverage for:
+- Content filtering functions (tragedy detection)
+- News fetching modules
+- API endpoints
