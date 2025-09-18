@@ -7,6 +7,7 @@ from typing import Dict, List
 from app.news_fetcher import fetch_headlines
 from app.filters import is_tragedy
 from app.db import init_db, save_article, get_recent_articles, get_article_count
+from app.notifications import send_notification
 
 # Load environment variables from .env file
 load_dotenv()
@@ -33,6 +34,8 @@ async def poll_headlines():
                     if article:
                         new_articles += 1
                         print(f"Saved tragedy article: {headline['title'][:50]}...")
+                        # Send push notification for new tragedy
+                        send_notification(headline['title'], headline['url'])
             
             if new_articles > 0:
                 print(f"Saved {new_articles} new tragedy articles to database")
@@ -123,6 +126,8 @@ async def trigger_poll(background_tasks: BackgroundTasks) -> Dict:
                     article = save_article(headline['title'], headline['url'])
                     if article:
                         new_articles += 1
+                        # Send push notification for new tragedy
+                        send_notification(headline['title'], headline['url'])
             
             print(f"Manual poll: saved {new_articles} new articles")
             return new_articles

@@ -69,17 +69,43 @@ The application uses environment variables for API keys. These are loaded from a
   - Get your free API key from https://newsapi.org/
   - The app will fallback to RSS feeds if NewsAPI is unavailable
 
-### Optional API Keys:
+### Firebase Configuration (for push notifications):
 
-- `FIREBASE_CREDENTIALS`: Path to Firebase service account credentials JSON (for future features)
-- Additional API keys can be added as needed
+- `FIREBASE_CREDENTIALS`: Path to Firebase service account credentials JSON
+  - Default: `serviceAccountKey.json` in project root
+  - Can be customized via environment variable
 
 Example `.env` file:
 
 ```
 NEWSAPI_KEY=your_newsapi_key_here
-FIREBASE_CREDENTIALS=path/to/credentials.json
+FIREBASE_CREDENTIALS=serviceAccountKey.json
 ```
+
+## Firebase Setup for Push Notifications
+
+To enable push notifications, you need to set up Firebase:
+
+1. **Create a Firebase Project:**
+   - Go to [Firebase Console](https://console.firebase.google.com/)
+   - Click "Create a project"
+   - Follow the setup wizard
+
+2. **Generate Service Account Key:**
+   - In Firebase Console, go to Project Settings > Service Accounts
+   - Click "Generate new private key"
+   - Download the JSON file
+   - Save it as `serviceAccountKey.json` in your project root
+
+3. **Enable Cloud Messaging:**
+   - In Firebase Console, go to Cloud Messaging
+   - Note your project's Sender ID and Server Key for client configuration
+
+4. **Configure Topics:**
+   - The app uses the topic "tragedies" for broadcasting notifications
+   - All clients should subscribe to this topic to receive notifications
+
+**Note:** Without Firebase configuration, the app will still function but won't send push notifications.
 
 ## Database
 
