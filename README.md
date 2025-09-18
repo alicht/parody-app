@@ -32,6 +32,13 @@ A FastAPI-based parody news application.
    
    Get your free API key from https://newsapi.org/
 
+5. Initialize the database:
+   ```bash
+   python -m app.db
+   ```
+   
+   This creates the SQLite database file (`parody.db`) and sets up the necessary tables.
+
 ## Running Locally
 
 Start the FastAPI development server:
@@ -42,9 +49,15 @@ uvicorn app.main:app --reload
 
 The API will be available at `http://localhost:8000`
 
-You can check the health status at: `http://localhost:8000/health`
+### Available Endpoints:
 
-API documentation will be available at: `http://localhost:8000/docs`
+- `GET /health` - Health check endpoint
+- `GET /articles` - Retrieve recent tragedy articles from database
+  - Optional query param: `?limit=50` (max 100)
+- `POST /poll` - Manually trigger headline polling
+- `GET /docs` - Interactive API documentation (Swagger UI)
+
+The application automatically polls for headlines every 5 minutes and stores tragedy-related articles in the database.
 
 ## API Keys Configuration
 
@@ -67,6 +80,16 @@ Example `.env` file:
 NEWSAPI_KEY=your_newsapi_key_here
 FIREBASE_CREDENTIALS=path/to/credentials.json
 ```
+
+## Database
+
+The application uses SQLite for data persistence with SQLAlchemy ORM.
+
+- **Database file**: `parody.db` (created automatically on first run)
+- **Article model**: Stores headline, URL, and detection timestamp
+- **Automatic deduplication**: Articles are uniquely identified by URL
+
+To reset the database, simply delete `parody.db` and restart the application.
 
 ## Testing
 
